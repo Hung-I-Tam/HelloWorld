@@ -1,0 +1,3 @@
+Function Model 功能开发，每个功能单独开发并测试用的
+Main Project 项目目录 “6_serial_toHttp_with_ap_station” 文件夹是最终版代码
+Sensor Model 传感器测试代码

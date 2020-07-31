@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="icon" href="data:;base64,=">
+    <title>wifi配置</title>
+
+    <style type="text/css" media="screen">
+        @charset "utf-8";
+        body,ul,p,h1,h2,h3,h4,dl,dd,form,input,textarea,select{ padding:0;margin:0;}
+        em { font-style:normal; }
+        li { list-style:none; }
+        a { text-decoration:none; }
+        img { border:none; vertical-align:top; }
+        /*  input { outline:none; }*/
+        body { font-size:12px; font-family:"Microsoft YaHei";overflow: hidden; }
+
+        .clear{*zoom:1;}
+        .clear:after{ display: block;clear: both;}
+        .fl{ float: left;}
+        .fr{ float: right;}
+
+        body{width: 100%; height: 100%;}
+        form{color:#444;font: bold 14px "SimHei";}
+
+
+        #content{text-align: center;height:370px;position: relative;z-index: 1000;background: #fff;}
+        #content h1{color:#444;font: 200 22px/60px "SimHei";color:#6699CC;}
+        #content h2{color:#444;font: 200 18px/40px "SimHei";}
+
+        #wifiname,#wifipwd,#ip_domain {width:90%;height:38px;margin: 10px 0;text-indent: 20%; font-size: 14px;color: #a0a0a1;}
+        #wifiname{background: no-repeat; border: 1;}
+        #wifipwd{background:  no-repeat; border: 1;}
+        #ip_domain{background:  no-repeat; border: 1;}
+
+        #content .bt{left:50%;margin-left:10%;width:80%;height:38px; font-size: 13px; color: #999999;line-height: 22px;}
+        #content .bt .check{height: 24px;margin-right: 2px;}
+        #content .bt span{ display:inline-block;padding-right:68px;cursor:pointer;}
+        #content .bt em{ padding-right: 68px;margin-bottom: 12px;cursor:pointer;}
+        #content .bt em:hover{color: #27a9e3;}
+        #submit{ font-size: 20px;line-height: 21px;background: #6699CC ; color: #f4f2f2;border: 0; width:100%;height:100%;cursor:pointer; border-radius: 10px;box-shadow: 3px 5px 12px #99CCFF, 0px 9px 25px rgba(0, 0, 0, .7);}
+        #submit:active{box-shadow: 3px 5px 12px #99CCFF, 0px 3px 6px rgba(0, 0, 0, .9);top: 6px;}
+
+        #footer{text-align: center;padding-top: 10px;clear: both;}
+        #footer p{width:100%;height:70px;position: absolute;bottom: 0;background:#CCCCFF;color:#fff;}
+
+        p span{position: relative;top: 39%;}
+
+        @media screen and (max-width: 700px) {
+            .text{display: none;}
+        }
+    </style>
+  </head>
+<body>
+<div id="content">
+    <h1>WiFi配置</h1>
+    <h2>WIFI连接状态: </h2>
+    <h3><span id="wifiState">wifi名称 密码 ip</span></h2>
+    <div class="bt clear">
+        <input id="submit" type="button" onclick="getWifiInfo()" value="获取当前配置信息"  />
+    </div><br>
+    <form>
+        WIFI名称:
+        <input  id="wifiname" type="text" placeholder="用户名"/><br/>
+        WIFI密码:
+        <input  id="wifipwd" type="password" placeholder="密码"/><br/>
+        ip或域名:
+        <input  id="ip_domain" type="text" placeholder="ip或域名"/><br/>
+        <div class="bt clear">
+            <input id="submit" type="button" onclick="setWifi(wifiname.value,wifipwd.value,ip_domain.value)" value="连接"  />
+        </div>
+    </form><br>
+</div>
+
+<div id="footer">
+    <p><span>&copy; 云端实验室 辽ICP备*********号</span></p>
+</div>
+
+<script type="text/javascript">
+    function setWifi(name,pwd,ip) {
+        //alert("按键点击！");
+        var xmlhttp;
+        if (name.length==0){
+            document.getElementById("wifiState").innerHTML="请输入WIFI信息！";
+            return;
+        }
+
+        if (window.XMLHttpRequest){
+            // IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+            xmlhttp=new XMLHttpRequest();
+        }else{
+            // IE6, IE5 浏览器执行代码
+            xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState==4 && xmlhttp.status==200){
+                //alert(xmlhttp.responseText);
+                //alert("操作成功");
+                document.getElementById("wifiState").innerHTML = xmlhttp.responseText;
+                console.log("wifi set : " + xmlhttp.responseText);
+             }
+        }
+
+        var requestString = "/wifi?config=on" + "&name="+name+"&pwd="+pwd+"&ip_domain="+ip;
+        xmlhttp.open("GET", requestString, true);
+        xmlhttp.send(null);
+    }
+
+    function getWifiInfo() {
+
+            var xmlhttp;
+
+            if (window.XMLHttpRequest){
+                xmlhttp=new XMLHttpRequest();
+            }else{
+                xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+            }
+
+            xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState==4 && xmlhttp.status==200){
+
+                    document.getElementById("wifiState").innerHTML = xmlhttp.responseText;
+                    console.log("wifi info : " + xmlhttp.responseText);
+                 }
+            }
+
+            var requestString = "/wifi?config=info";
+            xmlhttp.open("GET", requestString, true);
+            xmlhttp.send(null);
+        }
+
+</script>
+
+</body>
+</html>
